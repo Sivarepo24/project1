@@ -1,11 +1,7 @@
 version: '3'
 services:
   react-app:
-    image: $IMAGE
+    build: .
     ports:
       - "80:80"
     container_name: react_app
-EOF
-
-docker-compose up -d
-
