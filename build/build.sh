@@ -12,7 +12,7 @@ else
   IMAGE_NAME="sivakumar135/guvi_project_dev:latest"
 fi
 
-# Build the image
+# Build and tag Docker image
 docker build -t react_app .
 docker tag react_app $IMAGE_NAME
 

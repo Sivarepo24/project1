@@ -5,10 +5,10 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 echo "Current branch: $BRANCH"
 
-# Stop and remove any running container
+# Stop and remove running containers
 docker-compose down || true
 
-# Determine correct image
+# Choose image based on branch
 if [ "$BRANCH" == "main" ]; then
   echo "Deploying production image..."
   IMAGE="sivakumar135/guvi_project_prod:latest"
@@ -17,10 +17,10 @@ else
   IMAGE="sivakumar135/guvi_project_dev:latest"
 fi
 
-# Pull image
+# Pull the image
 docker pull "$IMAGE"
 
-# Generate docker-compose.yml with proper quotes
+# Create docker-compose.yml dynamically
 cat > docker-compose.yml <<EOF
 version: '3'
 services:
@@ -31,5 +31,5 @@ services:
     container_name: react_app
 EOF
 
-# Deploy
+# Start container
 docker-compose up -d

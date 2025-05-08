@@ -9,17 +9,18 @@ pipeline {
     stages {
         stage('Build Image') {
             steps {
-              dir('build') {
-                sh 'chmod +x build.sh'
-                sh './build.sh'
-              }
+                dir('build') {
+                    sh 'chmod +x build.sh'
+                    sh './build.sh'
+                }
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    def dockerRepo = (env.BRANCH_NAME == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
+                    def branch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    def dockerRepo = (branch == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
                         sh "docker tag react_app ${dockerRepo}:latest"
@@ -31,12 +32,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-              dir('build') {
-                sh 'chmod +x deploy.sh'
-                sh './deploy.sh'
-              }
+                dir('build') {
+                    sh 'chmod +x deploy.sh'
+                    sh './deploy.sh'
+                }
             }
         }
     }
 }
-
