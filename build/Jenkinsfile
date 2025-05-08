@@ -9,7 +9,8 @@ pipeline {
     stages {
         stage('Build Image') {
             steps {
-                sh './build/build.sh'
+                sh 'cd build'
+                sh './build.sh'
             }
         }
 
@@ -19,6 +20,7 @@ pipeline {
                     def dockerRepo = (env.BRANCH_NAME == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+                        sh 'cd build'
                         sh "docker tag react_app ${dockerRepo}:latest"
                         sh "docker push ${dockerRepo}:latest"
                     }
