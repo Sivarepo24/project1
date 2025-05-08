@@ -19,8 +19,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    def branch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
-                    def dockerRepo = (branch == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
+                    def dockerRepo = (env.BRANCH_NAME == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
                         sh "docker tag react_app ${dockerRepo}:latest"

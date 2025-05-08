@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get current Git branch
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
 
 echo "Building Docker image for branch: $BRANCH"
 
@@ -12,7 +12,7 @@ else
   IMAGE_NAME="sivakumar135/guvi_project_dev:latest"
 fi
 
-# Build and tag Docker image
+# Build the image
 docker build -t react_app .
 docker tag react_app $IMAGE_NAME
 
