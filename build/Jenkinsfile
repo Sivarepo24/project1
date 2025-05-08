@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_DEV_REPO = "sivakumar135/guvi_project_dev"
+        DOCKER_PROD_REPO = "sivakumar135/guvi_project_prod"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/Sivarepo24/build.git', branch: "${env.BRANCH_NAME}"
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh './build.sh'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    def dockerRepo = (env.BRANCH_NAME == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
+
+                    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+                        sh "docker tag react_app ${dockerRepo}:latest"
+                        sh "docker push ${dockerRepo}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh './deploy.sh'
+            }
+        }
+    }
+}
