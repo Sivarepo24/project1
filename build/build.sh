@@ -1,13 +1,12 @@
 #!/bin/bash
 
 # Get current Git branch
-BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 
 
 echo "Building Docker image for branch: $BRANCH_NAME"
 
 # Set Docker image name based on branch
-if [ "$BRANCH_NAME" == "main" ]; then
+if [[ "$BRANCH_NAME" == "master" ]]; then
   IMAGE_NAME="sivakumar135/guvi_project_prod:latest"
   
 else
