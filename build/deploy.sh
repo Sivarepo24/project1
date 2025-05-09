@@ -1,29 +1,26 @@
 #!/bin/bash
 
-# Get current Git branch
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-echo "Current branch: $BRANCH"
+# Stop and remove any existing containers
+docker-compose down || true
 
-# Stop and remove any running container
-docker-compose down
-
-# Clean up old images (optional)
-# docker image prune -f
-
-# Use the correct image based on the branch
-if [ "$BRANCH" == "main" ]; then
+# Determine image to use
+if [[ "$GIT_BRANCH" == "origin/main" ]]; then
   echo "Deploying production image..."
-  docker pull sivakumar135/guvi_project_prod:latest
-  IMAGE="sivakumar135/guvi_project_prod:latest"
-else
+  IMAGE=sivakumar135/guvi_project_prod:latest
+elif [[ "$GIT_BRANCH" == "origin/stage_dev" ]]; then
   echo "Deploying development image..."
-  docker pull sivakumar135/guvi_project_dev:latest
-  IMAGE="sivakumar135/guvi_project_dev:latest"
+  IMAGE=sivakumar135/guvi_project_dev:latest
+else
+  echo "Unknown branch. Exiting."
+  exit 1
 fi
 
-# Generate a temporary docker-compose file and run
-cat > docker-compose.override.yml <<EOF
+# Pull the image
+docker pull "$IMAGE"
+
+# Generate docker-compose.yml with proper YAML formatting
+cat <<EOF > docker-compose.yml
 version: '3'
 services:
   react-app:
@@ -33,5 +30,16 @@ services:
     container_name: react_app
 EOF
 
+# Start container
 docker-compose up -d
 
+
+docker-compose.yml
+
+version: '3'
+services:
+  react-app:
+    build: .
+    ports:
+      - "80:80"
+    container_name: react_app
