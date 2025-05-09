@@ -1,19 +1,22 @@
 #!/bin/bash
 
 # Get current Git branch
-BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
-echo "Current branch: $BRANCH"
+GIT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
+echo "Current branch: $GIT_BRANCH"
 
 # Stop and remove any existing containers
 docker-compose down || true
 
 # Determine image to use
-if [ "$BRANCH" == "origin/main" ]; then
+if [[ "$GIT_BRANCH" == "origin/main" ]]; then
   echo "Deploying production image..."
-  IMAGE="sivakumar135/guvi_project_prod:latest"
-else
+  IMAGE=sivakumar135/guvi_project_prod:latest
+elif [[ "$GIT_BRANCH" == "origin/stage_dev" ]]; then
   echo "Deploying development image..."
-  IMAGE="sivakumar135/guvi_project_dev:latest"
+  IMAGE=sivakumar135/guvi_project_dev:latest
+else
+  echo "Unknown branch. Exiting."
+  exit 1
 fi
 
 # Pull the image
@@ -24,7 +27,7 @@ cat <<EOF > docker-compose.yml
 version: '3'
 services:
   react-app:
-    image: "$IMAGE"
+    image: $IMAGE
     ports:
       - "80:80"
     container_name: react_app
