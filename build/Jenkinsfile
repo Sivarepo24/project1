@@ -20,9 +20,9 @@ pipeline {
             steps {
                 script {
                     def dockerRepo = ''
-                    if (env.BRANCH_NAME == 'origin/main') {
+                    if (env.GIT_BRANCH == 'origin/main') {
                         dockerRepo = env.DOCKER_PROD_REPO
-                    } else if (env.BRANCH_NAME == 'origin/stage_dev') {
+                    } else if (env.GIT_BRANCH == 'origin/stage_dev') {
                         dockerRepo = env.DOCKER_DEV_REPO
                     }
 
