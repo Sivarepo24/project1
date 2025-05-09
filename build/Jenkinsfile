@@ -7,6 +7,15 @@ pipeline {
     }
 
     stages {
+<<<<<<< HEAD
+=======
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/Sivarepo24/project1.git', branch: "${env.BRANCH_NAME}"
+            }
+        }
+
+>>>>>>> stage_dev
         stage('Build Image') {
             steps {
                 dir('build') {
