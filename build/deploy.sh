@@ -8,7 +8,7 @@ echo "Current branch: $BRANCH"
 docker-compose down || true
 
 # Determine image to use
-if [ "$BRANCH" == "main" ]; then
+if [ "$BRANCH" == "orgin/main" ]; then
   echo "Deploying production image..."
   IMAGE="sivakumar135/guvi_project_prod:latest"
 else
