@@ -1,17 +1,15 @@
 #!/bin/bash
 
-# Get current Git branch
-GIT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
 echo "Current branch: $GIT_BRANCH"
 
 # Stop and remove any existing containers
 docker-compose down || true
 
 # Determine image to use
-if [[ "$GIT_BRANCH" == "origin/main" ]]; then
+if [[ "$GIT_BRANCH" == "origin/main" || "$GIT_BRANCH" == "main" ]]; then
   echo "Deploying production image..."
   IMAGE=sivakumar135/guvi_project_prod:latest
-elif [[ "$GIT_BRANCH" == "origin/stage_dev" ]]; then
+elif [[ "$GIT_BRANCH" == "origin/stage_dev" || "$GIT_BRANCH" == "stage_dev" ]]; then
   echo "Deploying development image..."
   IMAGE=sivakumar135/guvi_project_dev:latest
 else
@@ -22,7 +20,7 @@ fi
 # Pull the image
 docker pull "$IMAGE"
 
-# Generate docker-compose.yml with proper YAML formatting
+# Generate docker-compose.yml
 cat <<EOF > docker-compose.yml
 version: '3'
 services:
