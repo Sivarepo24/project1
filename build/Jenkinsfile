@@ -19,12 +19,10 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                   
-
                     def dockerRepo = ''
                     if (env.BRANCH_NAME == 'origin/main') {
                         dockerRepo = env.DOCKER_PROD_REPO
-                    } else {
+                    } else if (env.BRANCH_NAME == 'origin/stage_dev') {
                         dockerRepo = env.DOCKER_DEV_REPO
                     }
 
