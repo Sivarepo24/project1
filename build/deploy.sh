@@ -8,7 +8,7 @@ docker-compose down || true
 if [[ "$GIT_BRANCH" == "origin/main" ]]; then
   echo "Deploying production image..."
   IMAGE=sivakumar135/guvi_project_prod:latest
-elif [[ "$GIT_BRANCH" == "origin/stage_dev" ]]; then
+elif [[ "$GIT_BRANCH" == "stage_dev" ]]; then
   echo "Deploying development image..."
   IMAGE=sivakumar135/guvi_project_dev:latest
 else

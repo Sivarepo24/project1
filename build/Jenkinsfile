@@ -7,25 +7,26 @@ pipeline {
     }
 
     stages {
-        stage('Clone') {
-            steps {
-                git url: 'https://github.com/Sivarepo24/project1.git', branch: "${env.BRANCH_NAME}"
-            }
-        }
-
         stage('Build Image') {
             steps {
-                sh './build.sh'
+                dir('build') {
+                    sh 'chmod +x build.sh'
+                    sh './build.sh'
+                }
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    def dockerRepo = (env.BRANCH_NAME == 'main') ? env.DOCKER_PROD_REPO : env.DOCKER_DEV_REPO
+                    def dockerRepo = ''
+                    if (env.GIT_BRANCH == 'origin/main') {
+                        dockerRepo = env.DOCKER_PROD_REPO
+                    } else if (env.GIT_BRANCH == 'stage_dev') {
+                        dockerRepo = env.DOCKER_DEV_REPO
+                    }
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
-                        sh "docker tag react_app ${dockerRepo}:latest"
                         sh "docker push ${dockerRepo}:latest"
                     }
                 }
@@ -34,9 +35,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh './deploy.sh'
+                dir('build') {
+                    sh 'chmod +x deploy.sh'
+                    sh './deploy.sh'
+                }
             }
         }
     }
 }
-
