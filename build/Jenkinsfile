@@ -19,17 +19,16 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo "Current branch: ${env.BRANCH_NAME}"
+                   
 
                     def dockerRepo = ''
-                    if (env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'origin/main') {
                         dockerRepo = env.DOCKER_PROD_REPO
                     } else {
                         dockerRepo = env.DOCKER_DEV_REPO
                     }
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
-                        sh "docker tag react_app ${dockerRepo}:latest"
                         sh "docker push ${dockerRepo}:latest"
                     }
                 }
