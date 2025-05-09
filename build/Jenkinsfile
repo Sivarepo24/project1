@@ -22,7 +22,7 @@ pipeline {
                     def dockerRepo = ''
                     if (env.GIT_BRANCH == 'origin/main') {
                         dockerRepo = env.DOCKER_PROD_REPO
-                    } else if (env.GIT_BRANCH == 'stage_dev') {
+                    } else if (env.GIT_BRANCH == 'origin/stage_dev') {
                         dockerRepo = env.DOCKER_DEV_REPO
                     }
 
