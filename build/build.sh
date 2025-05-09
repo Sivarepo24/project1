@@ -6,11 +6,11 @@
 echo "Building Docker image for branch: $BRANCH_NAME"
 
 # Set Docker image name based on branch
-if [[ "$BRANCH_NAME" == "master" ]]; then
-  IMAGE_NAME="sivakumar135/guvi_project_prod:latest"
+if [[ "$BRANCH_NAME" == "dev" ]]; then
+  IMAGE_NAME="sivakumar135/guvi_project_dev:latest"
   
 else
-  IMAGE_NAME="sivakumar135/guvi_project_dev:latest"
+  IMAGE_NAME="sivakumar135/guvi_project_prod:latest"
 fi
 
 # Build the image
