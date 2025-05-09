@@ -23,9 +23,9 @@ pipeline {
 
                     def dockerRepo = ''
                     if (env.BRANCH_NAME == 'origin/main') {
-                        dockerRepo = env.DOCKER_PROD_REPO
-                    } else {
                         dockerRepo = env.DOCKER_DEV_REPO
+                    } else {
+                        dockerRepo = env.DOCKER_PROD_REPO
                     }
 
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
